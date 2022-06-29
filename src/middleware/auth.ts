@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/usermodel";
 
 export function checkJWT(req: any, res: Response, next: NextFunction) {
   const token = req.cookies.jwt;
