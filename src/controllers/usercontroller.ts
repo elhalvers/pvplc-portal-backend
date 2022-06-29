@@ -52,7 +52,6 @@ export async function signout(req: Request, res: Response) {
 }
 
 export async function checkJWT(req: any, res: Response) {
-  console.log(req.login);
   const foundUser = await User.findOne({ login: req.login }).exec();
   if (!foundUser) return res.status(401).json({ message: "User doesn't exist or passwords don't match" });
   res.json({ user: foundUser });

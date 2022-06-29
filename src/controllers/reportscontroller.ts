@@ -36,6 +36,18 @@ export async function getReports(req: Request, res: Response) {
   }
 }
 
-export async function getIndividiual(req: Request, res: Response) {}
+export async function getIndividiual(req: Request, res: Response) {
+  const id = req.params.id;
+  try {
+    if (!id) throw "No id";
+    console.log(id);
+
+    const result = await Report.findById(id);
+    if (!result) throw "Doesn't exist";
+    else res.json(result);
+  } catch (error) {
+    res.status(404).json({ message: "No such id", error });
+  }
+}
 
 export async function deleteReport(req: Request, res: Response) {}

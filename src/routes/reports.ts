@@ -3,6 +3,9 @@ import * as controller from "../controllers/reportscontroller";
 import { checkJWT } from "../middleware/auth";
 const router = Router();
 router.use(checkJWT);
+
+router.get("/:id", controller.getIndividiual);
+
 router.get("/", controller.getReports);
 
 router.post("/", controller.createReport);
