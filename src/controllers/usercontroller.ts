@@ -4,8 +4,6 @@ import jwt from "jsonwebtoken";
 
 export async function getUser(req: Request, res: Response) {
   res.json("success");
-  const user = new User({ age: 26, name: "kyle" });
-  await user.save();
 }
 
 export async function login(req: Request, res: Response) {
