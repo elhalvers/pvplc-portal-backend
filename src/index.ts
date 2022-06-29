@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://pvplc-portal-client.vercel.app", "http://143.198.132.8:8080", "http://testingplatform.xyz"],
+    origin: ["http://localhost:3000", "https://pvplc-portal-client.vercel.app", "http://143.198.132.8:8080", "https://testingplatform.xyz"],
   })
 );
 app.use(morgan("tiny"));
