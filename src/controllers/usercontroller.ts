@@ -31,14 +31,14 @@ export async function login(req: Request, res: Response) {
         httpOnly: true,
         secure: true,
         sameSite: "none",
-        domain: process.env.NODE_ENV === "development" ? ".localhost" : ".pvplc-portal-client.vercel.app",
+        domain: process.env.NODE_ENV === "development" ? ".localhost" : ".testingplatform.xyz",
       });
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: "none",
       secure: true,
-      domain: process.env.NODE_ENV === "development" ? ".localhost" : ".pvplc-portal-client.vercel.app",
+      domain: process.env.NODE_ENV === "development" ? ".localhost" : ".testingplatform.xyz",
     });
     res.json({ user: foundUser });
   } else res.status(401).json({ message: "Passwords don't match" });
@@ -51,7 +51,7 @@ export async function signout(req: Request, res: Response) {
       httpOnly: true,
       sameSite: "none",
       secure: true,
-      domain: process.env.NODE_ENV === "development" ? ".localhost" : ".pvplc-portal-client.vercel.app",
+      domain: process.env.NODE_ENV === "development" ? ".localhost" : ".testingplatform.xyz",
     });
   res.json({ message: "signed out and cleared cookie" });
 }

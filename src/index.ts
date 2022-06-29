@@ -11,7 +11,12 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use(cors({ credentials: true, origin: ["http://localhost:3000", "https://pvplc-portal-client.vercel.app", "http://143.198.132.8:8080"] }));
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://pvplc-portal-client.vercel.app", "http://143.198.132.8:8080", "http://testingplatform.xyz"],
+  })
+);
 app.use(morgan("tiny"));
 app.use(cookieParser());
 
