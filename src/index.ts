@@ -34,14 +34,13 @@ mongoose
   .connect(uri)
   .then(() => {
     console.log("DB Connetion Successfull");
+    app.listen(PORT, () => {
+      console.log("listening on port", PORT);
+    });
   })
   .catch((err) => {
     console.error(err);
     console.log("connected to db");
   });
-
+mongoose.set("runValidators", true);
 const PORT = process.env.PORT || 3080;
-
-app.listen(PORT, () => {
-  console.log("listening on port", PORT);
-});
