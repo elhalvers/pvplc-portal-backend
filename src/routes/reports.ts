@@ -7,6 +7,8 @@ router.get("/", controller.getReports);
 
 router.get("/subtotals", isAdmin, controller.getSubtotals);
 
+router.get("/total", isAdmin, controller.getTotal);
+
 router.get("/:id", controller.getReport);
 
 router.post("/", controller.createReport);
