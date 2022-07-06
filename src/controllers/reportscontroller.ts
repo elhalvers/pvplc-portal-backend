@@ -108,7 +108,7 @@ export async function getReport(req: Request, res: Response) {
     if (!id) throw "No id";
     console.log(id);
 
-    const result = await Report.findById(id).populate("createdBy", "name email").lean();
+    const result = await Report.findById(id).populate("createdBy", "name login").lean();
     if (!result) throw "Doesn't exist";
     else res.json(result);
   } catch (error) {
