@@ -97,13 +97,14 @@ export async function checkJWT(req: any, res: Response) {
 }
 
 export async function update(req: any, res: Response) {
-  const { name, email, note }: { [key: string]: string } = req.body;
+  const { name, email, note, phone }: { [key: string]: string } = req.body;
   try {
     const result = await User.findById(req._id, "-password");
     if (!result) throw "Doesn't exist";
     result.name = name;
     result.email = email;
     result.note = note;
+    result.phone = phone;
     const saved = await result.save();
     const JSONED = saved.toJSON();
     res.json({ message: "Successfully updated user", user: JSONED });
@@ -114,7 +115,7 @@ export async function update(req: any, res: Response) {
 }
 
 export async function updateUser(req: any, res: Response) {
-  const { name, email, note, login, roles }: { [key: string]: string | undefined } = req.body;
+  const { name, email, note, login, roles, phone }: { [key: string]: string | undefined } = req.body;
   try {
     console.log("here 2");
 
@@ -125,6 +126,7 @@ export async function updateUser(req: any, res: Response) {
     if (email) result.email = email;
     if (note) result.note = note;
     if (login) result.login = login;
+    if (phone) result.phone = phone;
     if (roles) result.roles = roles.split(" ");
     const saved = await result.save();
     const JSONED = saved.toJSON();
@@ -136,10 +138,10 @@ export async function updateUser(req: any, res: Response) {
 }
 
 export async function createUser(req: any, res: Response) {
-  const { name, email, note, login, roles, password }: { [key: string]: string } = req.body;
+  const { name, email, note, login, roles, password, phone }: { [key: string]: string } = req.body;
   try {
     console.log("here 2");
-    const newuser = new User({ name, email, login, roles: roles.split(" "), password, note });
+    const newuser = new User({ name, email, login, roles: roles.split(" "), password, note, phone });
     const saved = await newuser.save();
     const JSONED = saved.toJSON();
     res.json({ message: "Successfully updated user", user: JSONED });

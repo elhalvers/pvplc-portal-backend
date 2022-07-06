@@ -39,6 +39,14 @@ const userSchema = new mongoose.Schema({
       message: "Regex failed to validate password",
     },
   },
+  phone: {
+    type: String,
+    lowercase: true,
+    required: true,
+    trim: true,
+    minLength: 10,
+    maxLength: 11,
+  },
   note: { type: String, maxLength: 300, default: "" },
   roles: {
     type: [String],
@@ -54,6 +62,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre("validate", function (next) {
   this.roles = this.roles.filter((role) => rolePossible.includes(role));
+  this.roles = this.roles.sort();
   next();
 });
 
