@@ -1,12 +1,13 @@
 import { Router } from "express";
 import * as controller from "../controllers/reportscontroller";
-import { checkJWT, hasAccess } from "../middleware/auth";
+import { checkJWT, hasAccess, isAdmin } from "../middleware/auth";
 const router = Router();
 router.use(checkJWT);
+router.get("/", controller.getReports);
+
+router.get("/subtotals", isAdmin, controller.getSubtotals);
 
 router.get("/:id", controller.getReport);
-
-router.get("/", controller.getReports);
 
 router.post("/", controller.createReport);
 

@@ -7,7 +7,7 @@ const activitySchema = new mongoose.Schema({
   trail: { type: String, required: [true, "Need trail"] },
   activity: { type: String, required: [true, "Need activity"] },
   quantity: { type: Number, required: false, min: [0, "Value too low"], max: [200, "Value too high"] },
-  notes: { type: String, required: false, maxlength: [300, "Too much text"] },
+  notes: { type: String, required: false, maxLength: [300, "Too much text"] },
   uuid: { type: String, required: [true, "Need uuid"] },
 });
 const reportSchema = new mongoose.Schema({

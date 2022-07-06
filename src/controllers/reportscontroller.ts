@@ -24,7 +24,22 @@ export async function createReport(req: any, res: Response) {
 
 export async function getReports(req: Request, res: Response) {
   try {
-    const results = await Report.find({}).populate("createdBy", "name").select("timeSpent reserve activities").lean();
+    const { month, year, reserve, trail }: { month?: number; year?: number; reserve?: string; trail?: string } = req.query;
+    console.log(req.query);
+
+    const results = await Report.find({
+      ...(year && {
+        date: {
+          $gte: new Date(year, month || 0, 1),
+          $lte: new Date(year, month || 11, 31),
+        },
+      }),
+      ...(reserve && { reserve }),
+      ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
+    })
+      .populate("createdBy", "name")
+      .select("timeSpent reserve activities")
+      .lean();
     console.log(results);
 
     if (results) {
@@ -32,6 +47,58 @@ export async function getReports(req: Request, res: Response) {
     }
   } catch (error) {
     res.status(500).json({ message: "Couldn't load " });
+  }
+}
+
+export async function getSubtotals(req: Request, res: Response) {
+  try {
+    const { month, year, reserve, trail }: { month?: number; year?: number; reserve?: string; trail?: string } = req.query;
+    console.log(req.query);
+
+    const results = await Report.aggregate([
+      {
+        $match: {
+          ...(year && {
+            date: {
+              $gte: new Date(year, month || 0, 1),
+              $lte: new Date(year, month || 11, 31),
+            },
+          }),
+          ...(reserve && { reserve }),
+          ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
+        },
+      },
+      {
+        $group: {
+          _id: "$createdBy",
+          totalminutes: { $sum: "$timeSpent" },
+          totalhours: { $sum: { $divide: ["$timeSpent", 60] } },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "_id",
+          as: "user_doc",
+        },
+      },
+      {
+        $project: {
+          totalminutes: { $round: ["$totalminutes", 2] },
+          totalhours: { $round: ["$totalhours", 2] },
+          _id: 0,
+          "user_doc.name": 1,
+        },
+      },
+    ]);
+    console.log(results);
+
+    if (results) {
+      res.json({ subtotal: results });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Couldn't calculate subtotals", error });
   }
 }
 
