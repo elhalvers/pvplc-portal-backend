@@ -36,7 +36,6 @@ const reportSchema = new mongoose.Schema({
   },
   activities: {
     type: [activitySchema],
-    required: [true, "No activities"],
     validate: {
       validator: function (array: any) {
         return array.length > 0;
