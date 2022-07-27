@@ -24,14 +24,14 @@ export async function createReport(req: any, res: Response) {
 
 export async function getReports(req: Request, res: Response) {
   try {
-    const { month, year, reserve, trail }: { month?: number; year?: number; reserve?: string; trail?: string } = req.query;
+    const { start,end, reserve, trail }: { start?: string; end?: string; reserve?: string; trail?: string } = req.query;
     console.log(req.query);
 
     const results = await Report.find({
-      ...(year && {
+      ...(start&&end && {
         date: {
-          $gte: new Date(year, month || 0, 1),
-          $lte: new Date(year, month || 11, 31),
+          $lte: Date.parse(end),
+          $gte: Date.parse(start),
         },
       }),
       ...(reserve && { reserve }),

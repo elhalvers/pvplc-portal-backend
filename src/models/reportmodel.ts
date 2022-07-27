@@ -37,15 +37,6 @@ const reportSchema = new mongoose.Schema({
   },
   activities: {
     type: [activitySchema],
-<<<<<<< HEAD
-=======
-    // validate: {
-    //   validator: function (array: any) {
-    //     return array.length > 0;
-    //   },
-    //   message: "Array must have at least 1 element",
-    // },
->>>>>>> 6aff2cdc6772104cc4142ad3a4b1906fe4c183ee
   },
   createdAt: {
     type: Date,
