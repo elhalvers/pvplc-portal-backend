@@ -14,6 +14,8 @@ const userSchema = new mongoose.Schema({
     },
   },
   login: { type: String, required: true, lowercase: true, unique: true, trim: true, minlength: 5 },
+  volunteerID: { type: String, required: true, lowercase: true, unique: true, trim: true },
+
   password: {
     type: String,
     required: true,

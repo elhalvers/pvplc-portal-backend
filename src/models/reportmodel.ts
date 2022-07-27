@@ -36,12 +36,12 @@ const reportSchema = new mongoose.Schema({
   },
   activities: {
     type: [activitySchema],
-    validate: {
-      validator: function (array: any) {
-        return array.length > 0;
-      },
-      message: "Array must have at least 1 element",
-    },
+    // validate: {
+    //   validator: function (array: any) {
+    //     return array.length > 0;
+    //   },
+    //   message: "Array must have at least 1 element",
+    // },
   },
   createdAt: {
     type: Date,
