@@ -24,17 +24,21 @@ export async function createReport(req: any, res: Response) {
 
 export async function getReports(req: Request, res: Response) {
   try {
-    const { start,end, reserve, trail }: { start?: string; end?: string; reserve?: string; trail?: string } = req.query;
+    const { start, end, reserve, trail, volunteer }: { start?: string; end?: string; reserve?: string; trail?: string; volunteer?: string } =
+      req.query;
     console.log(req.query);
 
     const results = await Report.find({
-      ...(start&&end && {
-        date: {
-          $lte: Date.parse(end),
-          $gte: Date.parse(start),
-        },
-      }),
+      ...(start &&
+        end && {
+          date: {
+            $lte: Date.parse(end),
+            $gte: Date.parse(start),
+          },
+        }),
       ...(reserve && { reserve }),
+      ...(volunteer && { createdBy: volunteer }),
+
       ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
     })
       .populate("createdBy", "name")
@@ -52,7 +56,8 @@ export async function getReports(req: Request, res: Response) {
 
 export async function getTotal(req: Request, res: Response) {
   try {
-    const { start, end, reserve, trail }: { start?: string; end?: string; reserve?: string; trail?: string } = req.query;
+    const { start, end, reserve, trail, volunteer }: { start?: string; end?: string; reserve?: string; trail?: string; volunteer?: string } =
+      req.query;
     console.log(req.query);
 
     const results = await Report.find({
@@ -64,6 +69,8 @@ export async function getTotal(req: Request, res: Response) {
           },
         }),
       ...(reserve && { reserve }),
+      ...(volunteer && { createdBy: volunteer }),
+
       ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
     })
       .populate("createdBy", "name")
@@ -81,7 +88,8 @@ export async function getTotal(req: Request, res: Response) {
 
 export async function getSubtotals(req: Request, res: Response) {
   try {
-    const { start, end, reserve, trail }: { start?: string; end?: string; reserve?: string; trail?: string } = req.query;
+    const { start, end, reserve, trail, volunteer }: { start?: string; end?: string; reserve?: string; trail?: string; volunteer?: string } =
+      req.query;
     console.log(req.query);
 
     const results = await Report.aggregate([
