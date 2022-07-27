@@ -6,11 +6,12 @@ import reportsRouter from "./routes/reports";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-
+import bodyParser from "body-parser";
 dotenv.config();
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ limit: "200mb" }));
+
 app.use(
   cors({
     credentials: true,

@@ -27,7 +27,7 @@ export async function hasAccess(req: any, res: Response, next: NextFunction) {
   const login = req.login;
   try {
     if (roles.includes("ADMIN") || roles.includes("MOD")) next();
-    if (id) {
+    else if (id) {
       const result: any = await Report.findById(id).populate("createdBy", "login").lean();
       if (typeof result == "undefined" || !result) throw "Doesn't exist";
       console.log("result", result);

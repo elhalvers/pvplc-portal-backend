@@ -52,21 +52,22 @@ export async function getReports(req: Request, res: Response) {
 
 export async function getTotal(req: Request, res: Response) {
   try {
-    const { month, year, reserve, trail }: { month?: number; year?: number; reserve?: string; trail?: string } = req.query;
+    const { start, end, reserve, trail }: { start?: string; end?: string; reserve?: string; trail?: string } = req.query;
     console.log(req.query);
 
     const results = await Report.find({
-      ...(year && {
-        date: {
-          $gte: new Date(year, month || 0, 1),
-          $lte: new Date(year, month || 11, 31),
-        },
-      }),
+      ...(start &&
+        end && {
+          date: {
+            $gte: Date.parse(end),
+            $lte: Date.parse(start),
+          },
+        }),
       ...(reserve && { reserve }),
       ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
     })
       .populate("createdBy", "name")
-      .select("timeSpent reserve activities startTime endTime date createdAt")
+      .select("timeSpent reserve activities  startTime endTime date createdAt")
       .lean();
     console.log(results);
 
@@ -74,24 +75,25 @@ export async function getTotal(req: Request, res: Response) {
       res.json({ total: results });
     }
   } catch (error) {
-    res.status(500).json({ message: "Couldn't load " });
+    res.status(500).json({ message: "Couldn't load ", error });
   }
 }
 
 export async function getSubtotals(req: Request, res: Response) {
   try {
-    const { month, year, reserve, trail }: { month?: number; year?: number; reserve?: string; trail?: string } = req.query;
+    const { start, end, reserve, trail }: { start?: string; end?: string; reserve?: string; trail?: string } = req.query;
     console.log(req.query);
 
     const results = await Report.aggregate([
       {
         $match: {
-          ...(year && {
-            date: {
-              $gte: new Date(year, month || 0, 1),
-              $lte: new Date(year, month || 11, 31),
-            },
-          }),
+          ...(start &&
+            end && {
+              date: {
+                $gte: Date.parse(end),
+                $lte: Date.parse(start),
+              },
+            }),
           ...(reserve && { reserve }),
           ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
         },

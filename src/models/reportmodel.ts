@@ -9,6 +9,7 @@ const activitySchema = new mongoose.Schema({
   quantity: { type: Number, required: false, min: [0, "Value too low"], max: [200, "Value too high"] },
   notes: { type: String, required: false, maxLength: [300, "Too much text"] },
   uuid: { type: String, required: [true, "Need uuid"] },
+  pictures: { type: [String] },
 });
 const reportSchema = new mongoose.Schema({
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -36,13 +37,6 @@ const reportSchema = new mongoose.Schema({
   },
   activities: {
     type: [activitySchema],
-    required: [true, "No activities"],
-    validate: {
-      validator: function (array: any) {
-        return array.length > 0;
-      },
-      message: "Array must have at least 1 element",
-    },
   },
   createdAt: {
     type: Date,
