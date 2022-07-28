@@ -28,6 +28,17 @@ export async function getUser(req: Request, res: Response) {
   }
 }
 
+export async function getVolunteers(req: Request, res: Response) {
+  try {
+    const results = await User.find({ roles: "VOLUNTEER" }).select("-password -note -email -login -phone").lean();
+    console.log(results);
+    if (results) {
+      res.json({ users: results });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Couldn't load " });
+  }
+}
 export async function deleteUser(req: Request, res: Response) {
   try {
     const id = req.params?.id;
@@ -115,7 +126,7 @@ export async function update(req: any, res: Response) {
 }
 
 export async function updateUser(req: any, res: Response) {
-  const { name, email, note, login, roles, phone,volunteerID }: { [key: string]: string | undefined } = req.body;
+  const { name, email, note, login, roles, phone, volunteerID }: { [key: string]: string | undefined } = req.body;
   try {
     console.log("here 2");
 
@@ -140,10 +151,10 @@ export async function updateUser(req: any, res: Response) {
 }
 
 export async function createUser(req: any, res: Response) {
-  const { name, email, note, login, roles, password, phone,volunteerID }: { [key: string]: string } = req.body;
+  const { name, email, note, login, roles, password, phone, volunteerID }: { [key: string]: string } = req.body;
   try {
     console.log("here 2");
-    const newuser = new User({ name, email, login, roles: roles.split(" "), password, note, phone ,volunteerID});
+    const newuser = new User({ name, email, login, roles: roles.split(" "), password, note, phone, volunteerID });
     const saved = await newuser.save();
     const JSONED = saved.toJSON();
     res.json({ message: "Successfully updated user", user: JSONED });

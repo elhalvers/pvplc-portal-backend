@@ -13,6 +13,7 @@ export async function createReport(req: any, res: Response) {
       date: body.date,
       createdBy: req._id,
       reserve: body.reserve,
+      buddies: body.buddies,
     });
     await report.save();
     const formatted = report.toJSON();
@@ -38,7 +39,6 @@ export async function getReports(req: Request, res: Response) {
         }),
       ...(reserve && { reserve }),
       ...(volunteer && { createdBy: volunteer }),
-
       ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
     })
       .populate("createdBy", "name")
@@ -50,7 +50,7 @@ export async function getReports(req: Request, res: Response) {
       res.json({ reports: results });
     }
   } catch (error) {
-    res.status(500).json({ message: "Couldn't load " });
+    res.status(500).json({ message: "Couldn't load ", error });
   }
 }
 
@@ -64,23 +64,22 @@ export async function getTotal(req: Request, res: Response) {
       ...(start &&
         end && {
           date: {
-            $gte: Date.parse(end),
-            $lte: Date.parse(start),
+            $lte: Date.parse(end),
+            $gte: Date.parse(start),
           },
         }),
       ...(reserve && { reserve }),
       ...(volunteer && { createdBy: volunteer }),
-
       ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
     })
       .populate("createdBy", "name")
       .select("timeSpent reserve activities  startTime endTime date createdAt")
       .lean();
-    console.log(results);
+    // console.log(results);
 
     if (results) {
       res.json({ total: results });
-    }
+    } else res.json({ total: [] });
   } catch (error) {
     res.status(500).json({ message: "Couldn't load ", error });
   }
@@ -91,6 +90,8 @@ export async function getSubtotals(req: Request, res: Response) {
     const { start, end, reserve, trail, volunteer }: { start?: string; end?: string; reserve?: string; trail?: string; volunteer?: string } =
       req.query;
     console.log(req.query);
+    console.log(new Date(start!));
+    console.log(new Date(end!));
 
     const results = await Report.aggregate([
       {
@@ -98,11 +99,12 @@ export async function getSubtotals(req: Request, res: Response) {
           ...(start &&
             end && {
               date: {
-                $gte: Date.parse(end),
-                $lte: Date.parse(start),
+                $gte: Date.parse(start),
+                $lte: Date.parse(end),
               },
             }),
           ...(reserve && { reserve }),
+          ...(volunteer && { createdBy: volunteer }),
           ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
         },
       },

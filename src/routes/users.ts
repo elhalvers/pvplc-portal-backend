@@ -3,7 +3,7 @@ import * as controller from "../controllers/usercontroller";
 import { isAdmin, canUpdate, checkJWT } from "../middleware/auth";
 const router = Router();
 router.get("/", checkJWT, controller.getUsers);
-
+router.get("/volunteers", checkJWT, controller.getVolunteers);
 router.get("/:id", checkJWT, controller.getUser);
 router.delete("/:id", checkJWT, controller.deleteUser);
 router.put("/:id", checkJWT, canUpdate, controller.updateUser);

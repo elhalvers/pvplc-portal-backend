@@ -15,6 +15,7 @@ const reportSchema = new mongoose.Schema({
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   reserve: { type: String, required: [true, "No reserve"], enum: keys },
   date: { type: Date, required: true },
+  buddies: { type: [{ name: String, _id: mongoose.Schema.Types.ObjectId }] },
   startTime: {
     type: String,
     required: true,
