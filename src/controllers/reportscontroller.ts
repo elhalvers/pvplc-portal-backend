@@ -23,7 +23,7 @@ export async function createReport(req: any, res: Response) {
   }
 }
 
-export async function getReports(req: Request, res: Response) {
+export async function getReports(req: any, res: Response) {
   try {
     const { start, end, reserve, trail, volunteer }: { start?: string; end?: string; reserve?: string; trail?: string; volunteer?: string } =
       req.query;
@@ -40,6 +40,7 @@ export async function getReports(req: Request, res: Response) {
       ...(reserve && { reserve }),
       ...(volunteer && { createdBy: volunteer }),
       ...(reserve && trail && { activities: { $elemMatch: { trail } } }),
+      ...(!req.roles.includes("ADMIN") && { createdBy: req._id }),
     })
       .populate("createdBy", "name")
       .select("timeSpent reserve activities")
