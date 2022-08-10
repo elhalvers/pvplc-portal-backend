@@ -33,8 +33,8 @@ export async function getReports(req: any, res: Response) {
       ...(start &&
         end && {
           date: {
-            $lte: Date.parse(end),
-            $gte: Date.parse(start),
+            $lte: new Date(end),
+            $gte: new Date(start),
           },
         }),
       ...(reserve && { reserve }),
@@ -59,7 +59,6 @@ export async function getTotal(req: Request, res: Response) {
   try {
     const { start, end, reserve, trail, volunteer }: { start?: string; end?: string; reserve?: string; trail?: string; volunteer?: string } =
       req.query;
-    console.log(req.query);
 
     const results = await Report.find({
       ...(start &&
@@ -100,8 +99,8 @@ export async function getSubtotals(req: Request, res: Response) {
           ...(start &&
             end && {
               date: {
-                $gte: Date.parse(start),
-                $lte: Date.parse(end),
+                $lte: new Date(end),
+                $gte: new Date(start),
               },
             }),
           ...(reserve && { reserve }),
@@ -110,8 +109,24 @@ export async function getSubtotals(req: Request, res: Response) {
         },
       },
       {
+        $project: {
+          buddyid: "$buddies._id",
+          _id: 1,
+          createdBy: 1,
+          timeSpent: 1,
+        },
+      },
+      {
+        $addFields: {
+          contributors: { $concatArrays: ["$buddyid", ["$createdBy"]] },
+        },
+      },
+      {
+        $unwind: { path: "$contributors", preserveNullAndEmptyArrays: true },
+      },
+      {
         $group: {
-          _id: "$createdBy",
+          _id: "$contributors",
           totalminutes: { $sum: "$timeSpent" },
           totalhours: { $sum: { $divide: ["$timeSpent", 60] } },
         },
