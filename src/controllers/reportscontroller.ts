@@ -144,6 +144,7 @@ export async function getSubtotals(req: Request, res: Response) {
           totalminutes: { $round: ["$totalminutes", 2] },
           totalhours: { $round: ["$totalhours", 2] },
           _id: 0,
+          "user_doc.volunteerID": 1,
           "user_doc.name": 1,
         },
       },
